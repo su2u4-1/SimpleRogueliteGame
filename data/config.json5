@@ -1,0 +1,20 @@
+{
+    w: 120,
+    h: 29,
+    symbol: {
+        player: "@",
+        wall_tr: "╔",  //右上
+        wall_dr: "╚",  //右下
+        wall_tl: "╗",  //左上
+        wall_dl: "╝",  //左下
+        wall_cc: "╬",  //十字
+        wall_tc: "╦",  //下凸
+        wall_dc: "╩",  //上凸
+        wall_rc: "╣",  //左凸
+        wall_lc: "╠",  //右凸
+        wall_ho: "═",  //橫
+        wall_st: "║",  //直
+        road: ".",
+        null: " ",
+    },
+}
