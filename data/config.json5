@@ -1,7 +1,7 @@
 {
     w: 120,
     h: 29,
-    fps: 0.1,
+    fps: 0.15,
     symbol: {
         player: "@",
         enemy_s: "s",

@@ -3,25 +3,40 @@ from time import sleep
 from keyboard import read_key
 from GameManager import GameManager
 
+
 def main(game: GameManager) -> None:
     game.update()
     game.show()
+    cc = None
+    cc_count = 0
+    key = "null"
     while True:
-        key = read_key()
+        while key != "null":
+            key = read_key()
+            print(key)
+            if key == cc:
+                cc_count += 1
+            else:
+                cc = key
+                cc_count = 0
         player = game.entity["player"]
-        if key == "w" and game.maze[player.y-1][player.x] == "road" and game.screen[player.y-1][player.x] == "null":
+        if key == "w" and game.maze[player.y - 1][player.x] == "road" and game.screen[player.y - 1][player.x] == "null":
             player.y -= 1
-        elif key == "a" and game.maze[player.y][player.x-1] == "road" and game.screen[player.y][player.x-1] == "null":
+        elif key == "a" and game.maze[player.y][player.x - 1] == "road" and game.screen[player.y][player.x - 1] == "null":
             player.x -= 1
-        elif key == "s" and game.maze[player.y+1][player.x] == "road" and game.screen[player.y+1][player.x] == "null":
+        elif key == "s" and game.maze[player.y + 1][player.x] == "road" and game.screen[player.y + 1][player.x] == "null":
             player.y += 1
-        elif key == "d" and game.maze[player.y][player.x+1] == "road" and game.screen[player.y][player.x+1] == "null":
+        elif key == "d" and game.maze[player.y][player.x + 1] == "road" and game.screen[player.y][player.x + 1] == "null":
             player.x += 1
         elif key == "esc":
             return
         game.update()
         game.show()
-        sleep(game.fps)
+        if cc_count >= 5:
+            sleep(game.fps / 2)
+        else:
+            sleep(game.fps)
+
 
 if __name__ == "__main__":
     root = os.path.abspath(".")

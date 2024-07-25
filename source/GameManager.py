@@ -5,6 +5,7 @@ import json5
 
 DX, DY = [1, 0, -1, 0], [0, 1, 0, -1]
 
+
 class GameManager:
     def __init__(self, config_file_path: str) -> None:
         with open(config_file_path, "r") as f:
@@ -13,11 +14,11 @@ class GameManager:
         self.h = config["h"]
         self.fps = config["fps"]
         self.symbol: dict[str, str] = config["symbol"]
-        self.maze_w = (self.w+5) // 12
-        self.maze_h = (self.h+1) // 6
+        self.maze_w = (self.w + 5) // 12
+        self.maze_h = (self.h + 1) // 6
         self.screen = [["null" for _ in range(self.w)] for _ in range(self.h)]
         self.maze = [["null" for _ in range(self.w)] for _ in range(self.h)]
-        self.entity:dict[str, Entity] = {}
+        self.entity: dict[str, Entity] = {}
 
     def create_maze(self, w: int, h: int) -> None:
         maze = [[0 for _ in range(w)] for _ in range(h)]
@@ -53,69 +54,69 @@ class GameManager:
 
         for i in range(len(maze)):
             for j in range(len(maze[i])):
-                self.maze[i*6][j*12] = "wall_tl"
-                self.maze[i*6+4][j*12] = "wall_dl"
-                self.maze[i*6][j*12+6] = "wall_tr"
-                self.maze[i*6+4][j*12+6] = "wall_dr"
-                self.maze[i*6][j*12+1] = "wall_ho"
-                self.maze[i*6][j*12+5] = "wall_ho"
-                self.maze[i*6+4][j*12+1] = "wall_ho"
-                self.maze[i*6+4][j*12+5] = "wall_ho"
+                self.maze[i * 6][j * 12] = "wall_tl"
+                self.maze[i * 6 + 4][j * 12] = "wall_dl"
+                self.maze[i * 6][j * 12 + 6] = "wall_tr"
+                self.maze[i * 6 + 4][j * 12 + 6] = "wall_dr"
+                self.maze[i * 6][j * 12 + 1] = "wall_ho"
+                self.maze[i * 6][j * 12 + 5] = "wall_ho"
+                self.maze[i * 6 + 4][j * 12 + 1] = "wall_ho"
+                self.maze[i * 6 + 4][j * 12 + 5] = "wall_ho"
                 for x in range(1, 4):
                     for y in range(1, 6):
-                        self.maze[i*6+x][j*12+y] = "road"
+                        self.maze[i * 6 + x][j * 12 + y] = "road"
                 if maze[i][j] >= 8:
                     maze[i][j] -= 8
-                    self.maze[i*6+4][j*12+2] = "wall_tr"
-                    self.maze[i*6+4][j*12+3] = "road"
-                    self.maze[i*6+4][j*12+4] = "wall_tl"
-                    self.maze[i*6+5][j*12+2] = "wall_st"
-                    self.maze[i*6+5][j*12+3] = "road"
-                    self.maze[i*6+5][j*12+4] = "wall_st"
+                    self.maze[i * 6 + 4][j * 12 + 2] = "wall_tr"
+                    self.maze[i * 6 + 4][j * 12 + 3] = "road"
+                    self.maze[i * 6 + 4][j * 12 + 4] = "wall_tl"
+                    self.maze[i * 6 + 5][j * 12 + 2] = "wall_st"
+                    self.maze[i * 6 + 5][j * 12 + 3] = "road"
+                    self.maze[i * 6 + 5][j * 12 + 4] = "wall_st"
                 else:
-                    self.maze[i*6+4][j*12+2] = "wall_ho"
-                    self.maze[i*6+4][j*12+3] = "wall_ho"
-                    self.maze[i*6+4][j*12+4] = "wall_ho"
+                    self.maze[i * 6 + 4][j * 12 + 2] = "wall_ho"
+                    self.maze[i * 6 + 4][j * 12 + 3] = "wall_ho"
+                    self.maze[i * 6 + 4][j * 12 + 4] = "wall_ho"
                 if maze[i][j] >= 4:
                     maze[i][j] -= 4
-                    self.maze[i*6+1][j*12] = "wall_dr"
-                    self.maze[i*6+2][j*12] = "road"
-                    self.maze[i*6+3][j*12] = "wall_tr"
+                    self.maze[i * 6 + 1][j * 12] = "wall_dr"
+                    self.maze[i * 6 + 2][j * 12] = "road"
+                    self.maze[i * 6 + 3][j * 12] = "wall_tr"
                 else:
-                    self.maze[i*6+1][j*12] = "wall_st"
-                    self.maze[i*6+2][j*12] = "wall_st"
-                    self.maze[i*6+3][j*12] = "wall_st"
+                    self.maze[i * 6 + 1][j * 12] = "wall_st"
+                    self.maze[i * 6 + 2][j * 12] = "wall_st"
+                    self.maze[i * 6 + 3][j * 12] = "wall_st"
                 if maze[i][j] >= 2:
                     maze[i][j] -= 2
-                    self.maze[i*6][j*12+2] =  "wall_dr"
-                    self.maze[i*6][j*12+3] =  "road"
-                    self.maze[i*6][j*12+4] =  "wall_dl"
+                    self.maze[i * 6][j * 12 + 2] = "wall_dr"
+                    self.maze[i * 6][j * 12 + 3] = "road"
+                    self.maze[i * 6][j * 12 + 4] = "wall_dl"
                 else:
-                    self.maze[i*6][j*12+2] =  "wall_ho"
-                    self.maze[i*6][j*12+3] =  "wall_ho"
-                    self.maze[i*6][j*12+4] =  "wall_ho"
+                    self.maze[i * 6][j * 12 + 2] = "wall_ho"
+                    self.maze[i * 6][j * 12 + 3] = "wall_ho"
+                    self.maze[i * 6][j * 12 + 4] = "wall_ho"
                 if maze[i][j] >= 1:
                     maze[i][j] -= 1
-                    self.maze[i*6+1][j*12+6] =  "wall_dl"
-                    self.maze[i*6+2][j*12+6] =  "road"
-                    self.maze[i*6+3][j*12+6] =  "wall_tl"
+                    self.maze[i * 6 + 1][j * 12 + 6] = "wall_dl"
+                    self.maze[i * 6 + 2][j * 12 + 6] = "road"
+                    self.maze[i * 6 + 3][j * 12 + 6] = "wall_tl"
                     for x in range(7, 12):
-                        self.maze[i*6+1][j*12+x] =  "wall_ho"
-                        self.maze[i*6+2][j*12+x] =  "road"
-                        self.maze[i*6+3][j*12+x] =  "wall_ho"
+                        self.maze[i * 6 + 1][j * 12 + x] = "wall_ho"
+                        self.maze[i * 6 + 2][j * 12 + x] = "road"
+                        self.maze[i * 6 + 3][j * 12 + x] = "wall_ho"
                 else:
-                    self.maze[i*6+1][j*12+6] =  "wall_st"
-                    self.maze[i*6+2][j*12+6] =  "wall_st"
-                    self.maze[i*6+3][j*12+6] =  "wall_st"
+                    self.maze[i * 6 + 1][j * 12 + 6] = "wall_st"
+                    self.maze[i * 6 + 2][j * 12 + 6] = "wall_st"
+                    self.maze[i * 6 + 3][j * 12 + 6] = "wall_st"
 
     def show(self) -> None:
-        system('cls')
+        system("cls")
         for i in range(self.h):
             for j in range(self.w):
                 if self.screen[i][j] == "null":
-                    print(self.symbol[self.maze[i][j]], end = "")
+                    print(self.symbol[self.maze[i][j]], end="")
                 else:
-                    print(self.symbol[self.screen[i][j]], end = "")
+                    print(self.symbol[self.screen[i][j]], end="")
             print()
 
     def summon_entity(self, enemy_number: int):
@@ -124,9 +125,9 @@ class GameManager:
             while True:
                 tx, ty = randrange(0, self.maze_w), randrange(0, self.maze_h)
                 if tx > 0 or ty > 0:
-                    x, y = randrange(tx*12+1, tx*12+6), randrange(ty*6+1, ty*6+4)
+                    x, y = randrange(tx * 12 + 1, tx * 12 + 6), randrange(ty * 6 + 1, ty * 6 + 4)
                     if self.maze[y][x] == "road" and self.screen[y][x] == "null":
-                            break
+                        break
             size = randrange(0, 3)
             if size == 0:
                 self.entity[f"enemy_{i}"] = Entity("enemy_s", x, y, {"room": (tx, ty)})
@@ -139,6 +140,7 @@ class GameManager:
         self.screen = [["null" for _ in range(self.w)] for _ in range(self.h)]
         for i in self.entity.values():
             self.screen[i.y][i.x] = i.id
+
 
 class Entity:
     def __init__(self, id, x, y, attr: dict[str, Any] = {}):
