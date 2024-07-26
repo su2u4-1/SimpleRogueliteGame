@@ -1,7 +1,7 @@
 from os import system
 from random import randrange
-from typing import Any
 import json5
+from Entity import Entity
 
 DX, DY = [1, 0, -1, 0], [0, 1, 0, -1]
 
@@ -136,15 +136,7 @@ class GameManager:
             elif size == 2:
                 self.entity[f"enemy_{i}"] = Entity("enemy_l", x, y, {"room": (tx, ty)})
 
-    def update(self) -> None:
+    def update_screen(self) -> None:
         self.screen = [["null" for _ in range(self.w)] for _ in range(self.h)]
         for i in self.entity.values():
             self.screen[i.y][i.x] = i.id
-
-
-class Entity:
-    def __init__(self, id, x, y, attr: dict[str, Any] = {}):
-        self.id = id
-        self.x = x
-        self.y = y
-        self.attr = attr
