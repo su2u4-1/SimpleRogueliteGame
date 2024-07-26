@@ -110,6 +110,7 @@ class GameManager:
                     self.maze[i * 6 + 3][j * 12 + 6] = "wall_st"
 
     def show(self) -> None:
+        self.update()
         system("cls")
         for i in range(self.h):
             for j in range(self.w):
@@ -130,13 +131,19 @@ class GameManager:
                         break
             size = randrange(0, 3)
             if size == 0:
-                self.entity[f"enemy_{i}"] = Entity("enemy_s", x, y, {"room": (tx, ty)})
+                self.entity[f"enemy_{i}"] = Entity("enemy_s", x, y, (tx, ty))
             elif size == 1:
-                self.entity[f"enemy_{i}"] = Entity("enemy_m", x, y, {"room": (tx, ty)})
+                self.entity[f"enemy_{i}"] = Entity("enemy_m", x, y, (tx, ty))
             elif size == 2:
-                self.entity[f"enemy_{i}"] = Entity("enemy_l", x, y, {"room": (tx, ty)})
+                self.entity[f"enemy_{i}"] = Entity("enemy_l", x, y, (tx, ty))
 
-    def update_screen(self) -> None:
+    def update(self) -> None:
         self.screen = [["null" for _ in range(self.w)] for _ in range(self.h)]
         for i in self.entity.values():
+            tx, mx = divmod(i.x, 12)
+            ty, my = divmod(i.y, 6)
+            if mx < 6 and my < 4:
+                i.room = (tx, ty)
+            else:
+                i.room = (-1, -1)
             self.screen[i.y][i.x] = i.id

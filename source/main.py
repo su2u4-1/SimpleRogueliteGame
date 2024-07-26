@@ -5,16 +5,58 @@ from GameManager import GameManager
 from Entity import Entity
 
 
-def find_path(start: tuple[int, int], end: tuple[int, int]) -> list[tuple[int, int]]:
-    pass
+DX, DY = [1, 0, -1, 0], [0, 1, 0, -1]
+
+
+def find_path(start: tuple[int, int], end: tuple[int, int], map: list[list[str]]) -> list[tuple[int, int]]:
+    f = [[j != "road" for j in i] for i in map]
+    a = [start]
+    p = {start: None}
+    f[start[1]][start[0]] = False
+    f[end[1]][end[0]] = False
+    while True:
+        if len(a) == 0:
+            break
+        i = a.pop(0)
+        if i == end:
+            break
+        if f[i[1]][i[0]]:
+            continue
+        f[i[1]][i[0]] = True
+        for d in range(4):
+            x, y = i[0] + DX[d], i[1] + DY[d]
+            if 0 <= x < len(map[0]) and 0 <= y < len(map) and not f[y][x]:
+                p[(x, y)] = i
+                a.append((x, y))
+    path = []
+    while i is not None:
+        path.append(i)
+        i = p[i]
+    return path[:-1]
 
 
 def move(v: Entity, player: Entity) -> None:
-    path = find_path((v.x, v.y), (player.x, player.y))
+    game.update()
+    m = []
+    for i in range(6):
+        t = []
+        for j in range(12):
+            t1 = game.screen[player.room[1] * 6 + i][player.room[0] * 12 + j]
+            if t1 == "null":
+                t1 = game.maze[player.room[1] * 6 + i][player.room[0] * 12 + j]
+            t.append(t1)
+        m.append(t)
+    path = find_path((v.x % 12, v.y % 6), (player.x % 12, player.y % 6), m)
+    if len(path) == 0:
+        return
+    x, y = path[-1]
+    x += v.room[0] * 12
+    y += v.room[1] * 6
+    if game.maze[y][x] == "road" and game.screen[y][x] == "null":
+        v.x, v.y = x, y
 
 
 def main(game: GameManager) -> None:
-    game.update_screen()
     game.show()
     cc = None
     cc_count = 0
@@ -37,14 +79,10 @@ def main(game: GameManager) -> None:
             player.x += 1
         elif key == "esc":
             return
-        tx, mx = divmod(player.x, 12)
-        ty, my = divmod(player.y, 6)
-        if mx < 6 and my < 4:
-            player.attr["room"] = (tx, ty)
         for i in game.entity.values():
-            if i.attr["room"] == player.attr["room"]:
+            game.update()
+            if i.id.startswith("enemy_") and i.room == player.room:
                 move(i, player)
-        game.update_screen()
         game.show()
         if cc_count >= 5:
             sleep(game.fps / 2)
