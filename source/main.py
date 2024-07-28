@@ -16,7 +16,10 @@ def find_path(start: tuple[int, int], end: tuple[int, int], map: list[list[str]]
     f[end[1]][end[0]] = False
     while True:
         if len(a) == 0:
-            break
+            if len(p) == 0:
+                return []
+            end = min(p.keys(), key=lambda x: (x[0] - end[0]) ** 2 + (x[1] - end[1]) ** 2)
+            return find_path(start, end, map)
         i = a.pop(0)
         if i == end:
             break
