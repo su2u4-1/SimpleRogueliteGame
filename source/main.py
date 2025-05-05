@@ -11,7 +11,7 @@ DX, DY = [1, 0, -1, 0], [0, 1, 0, -1]
 def find_path(start: tuple[int, int], end: tuple[int, int], map: list[list[str]]) -> list[tuple[int, int]]:
     f = [[j != "road" for j in i] for i in map]
     a = [start]
-    p = {start: None}
+    p = {start: (-1, -1)}
     f[start[1]][start[0]] = False
     f[end[1]][end[0]] = False
     while True:
@@ -31,8 +31,8 @@ def find_path(start: tuple[int, int], end: tuple[int, int], map: list[list[str]]
             if 0 <= x < len(map[0]) and 0 <= y < len(map) and not f[y][x]:
                 p[(x, y)] = i
                 a.append((x, y))
-    path = []
-    while i is not None:
+    path: list[tuple[int, int]] = []
+    while i != (-1, -1):
         path.append(i)
         i = p[i]
     return path[:-1]
@@ -40,9 +40,9 @@ def find_path(start: tuple[int, int], end: tuple[int, int], map: list[list[str]]
 
 def move(v: Entity, player: Entity) -> None:
     game.update()
-    m = []
+    m: list[list[str]] = []
     for i in range(6):
-        t = []
+        t: list[str] = []
         for j in range(12):
             t1 = game.screen[player.room[1] * 6 + i][player.room[0] * 12 + j]
             if t1 == "null":
@@ -88,16 +88,16 @@ def main(game: GameManager) -> None:
                 move(i, player)
         game.show()
         if cc_count >= 5:
-            sleep(game.fps / 2)
+            sleep(game.speed / 2)
         else:
-            sleep(game.fps)
+            sleep(game.speed)
 
 
 if __name__ == "__main__":
     root = os.path.abspath(".")
     if root.endswith("\\source"):
         root = root[:-7]
-    game = GameManager(os.path.join(root, "data", f"config.json5"))
+    game = GameManager(os.path.join(root, "data", f"config.json"))
     game.create_maze(game.maze_w, game.maze_h)
     game.summon_entity(game.maze_w * game.maze_h)
     main(game)

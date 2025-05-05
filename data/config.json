@@ -1,0 +1,24 @@
+{
+    "w": 120,
+    "h": 29,
+    "speed": 0.15,
+    "symbol": {
+        "player": "@",
+        "enemy_s": "s",
+        "enemy_m": "g",
+        "enemy_l": "G",
+        "wall_tr": "╗",
+        "wall_dr": "╝",
+        "wall_tl": "╔",
+        "wall_dl": "╚",
+        "wall_cc": "╬",
+        "wall_tc": "╦",
+        "wall_dc": "╩",
+        "wall_rc": "╣",
+        "wall_lc": "╠",
+        "wall_ho": "═",
+        "wall_st": "║",
+        "road": ".",
+        "null": " "
+    }
+}

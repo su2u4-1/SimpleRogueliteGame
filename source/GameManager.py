@@ -1,6 +1,6 @@
 from os import system
 from random import randrange
-import json5
+import json
 from Entity import Entity
 
 DX, DY = [1, 0, -1, 0], [0, 1, 0, -1]
@@ -9,11 +9,20 @@ DX, DY = [1, 0, -1, 0], [0, 1, 0, -1]
 class GameManager:
     def __init__(self, config_file_path: str) -> None:
         with open(config_file_path, "r") as f:
-            config: dict[str, int | dict[str, str]] = json5.load(f)
-        self.w = config["w"]
-        self.h = config["h"]
-        self.fps = config["fps"]
-        self.symbol: dict[str, str] = config["symbol"]
+            config: dict[str, int | dict[str, str]] = json.load(f)
+        if isinstance(config["w"], int) and isinstance(config["h"], int):
+            self.w = config["w"]
+            self.h = config["h"]
+        else:
+            raise ValueError("Invalid width or height configuration")
+        if isinstance(config["speed"], float):
+            self.speed = config["speed"]
+        else:
+            raise ValueError("Invalid speed configuration")
+        if isinstance(config["symbol"], dict):
+            self.symbol: dict[str, str] = config["symbol"]
+        else:
+            raise ValueError("Invalid symbol configuration")
         self.maze_w = (self.w + 5) // 12
         self.maze_h = (self.h + 1) // 6
         self.screen = [["null" for _ in range(self.w)] for _ in range(self.h)]
